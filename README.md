@@ -13,8 +13,16 @@
 - Git: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 - Azure account
 
-### Initialize
-- Login to to azure by CLI to get ID value
+### Initialize on Windows
+- Open Powershell as Administrator, Install chocolatey, after that reopen Powershell as Administrator
+```powershell
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+```
+- Install terraform, git, azure-cli using chocolatey	
+```powershell
+choco install terraform git azure-cli -y
+```
+- Login to azure cli to get ID value
 ```
 az login
 ```
@@ -40,7 +48,6 @@ in the output, note the below for terraform to run
 ```
 if there are some errors during the apply process, you need to review variables you set in the terraform.tfvars to make sure everything is correctly set, the run the last command again, or destroy (with command below) and run 2 last commands again
 *Note: terraform needs about 45-60min to provision labs (depends on the number of labs)*
-- After finish provision, you can access the lab guide in folder "outputs" - find the file relevant to your resource-group names, each participant will have a public IP stated in the file together with user/password
 - After infra provisioned, make sure a file ***terraform.tfstate*** generated in the same folder. This file is critical for your to clean up all the labs after the session
 - When you finish the hands-on, to clean-up all the infra, run below:
 ```
@@ -48,6 +55,4 @@ if there are some errors during the apply process, you need to review variables 
 ```
 
 ## Lab access
-- Once terraform finishes the provision, its output contains the RDP Public IPs map to each user lab, some things like below
-
-- User can use configuration that you specified in terraform.tfvars to login
+- After provisioning , you can access the lab guide in folder "outputs" - find the file relevant to your resource-group names, each participant will have a public IP stated in the file together with user/password
