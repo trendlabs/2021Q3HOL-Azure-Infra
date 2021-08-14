@@ -130,7 +130,11 @@ data "template_file" "outputs" {
     ADMIN-PASSWORD = var.admin-password,
     RG-NAME = local.resource-groups[count.index].name
     RG-LOCATION = local.resource-groups[count.index].location
-    JUMP-IP-LIST   = join("\n",module.lab-VM-provision[count.index].jump_public_ip_address)
+<<<<<<< HEAD
+    JUMP-IP-LIST   = join("\n", module.lab-VM-provision[count.index].jump_public_ip_address)
+=======
+    JUMP-IP-LIST   = join("\n", module.lab-VM-provision[count.index].jump_public_ip_address)
+>>>>>>> e4052b8beb860cd3fbf26ad46f510958bdcefeb5
   })
 }
 
