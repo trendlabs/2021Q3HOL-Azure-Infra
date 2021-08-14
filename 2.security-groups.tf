@@ -3,7 +3,7 @@ resource "azurerm_network_security_group" "jump-vm-nsg" {
 
   count = length(var.rg_list)
 
-  name                = "${var.environment}-${local.resource-groups[count.index].name}-JUMP-nsg-${random_string.random-network-sg[count.index].result}"
+  name                = "${var.environment}-${keys(var.rg_list)[count.index]}-JUMP-nsg-${random_string.random-network-sg[count.index].result}"
   location            = local.location[count.index]
   resource_group_name = local.resource-groups[count.index].name
 
@@ -45,7 +45,7 @@ resource "azurerm_network_security_group" "linux-vm-nsg" {
 
   count = length(var.rg_list)
 
-  name                = "${var.environment}-${local.resource-groups[count.index].name}-LINUX-nsg-${random_string.random-network-sg[count.index].result}"
+  name                = "${var.environment}-${keys(var.rg_list)[count.index]}-LINUX-nsg-${random_string.random-network-sg[count.index].result}"
   location            = local.location[count.index]
   resource_group_name = local.resource-groups[count.index].name
 

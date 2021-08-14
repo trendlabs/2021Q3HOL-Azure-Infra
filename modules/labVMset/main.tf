@@ -1,6 +1,6 @@
 locals {
   location = data.azurerm_resource_group.lab-rg.location  
-  prefix = "${var.environment}-${var.resource-group-name}"
+  prefix = format("%s-%s", var.environment, replace(var.resource-group-name,"${var.environment}-",""))
 }
 
 // Get resource group data

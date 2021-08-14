@@ -2,12 +2,12 @@
 # TF_LOG_PATH=/tmp/log
 
 locals {
-  //Australia Central 2: to save cost & near APAC
-  // https://azureprice.net/?region=australiacentral2&priority=spot
+  //Australia Central: to save cost & near APAC
+  // https://azureprice.net/?region=australiacentral&priority=spot
   resource-groups = (var.create-rgs) ? flatten([
     for name in keys(var.rg_list)[*] : {
       name     = "${var.environment}-${name}"
-      location = "Australia Central 2"
+      location = "Australia Central"
     }
   ]) : flatten([
     for name in keys(var.rg_list)[*] : {
@@ -96,7 +96,7 @@ module "lab-VM-provision" {
     vm-size     = "Standard_D4s_v4"
     # 4vCPU & 16GbRAM & ACU 195
     # Central US Spot Windows price ~$0.19641/hour
-    # Australia Central 2 Spot Windows price ~0.062496/hour
+    # Australia Central Spot Windows price ~0.069485/hour 
     vm-image = {
       publisher = "MicrosoftWindowsServer"
       offer     = "WindowsServer"
@@ -112,7 +112,7 @@ module "lab-VM-provision" {
     vm-size     = "Standard_D2s_v4"
     # 2vCPU & 8GbRAM & ACU 195
     # Central US Spot CentOS price ~$0.020774/hour
-    # Australia Central 2 Spot price ~0.0147/hour
+    # Australia Central Spot price ~$0.0139/hour 
     vm-image = {
       publisher = "OpenLogic"
       offer     = "CentOS"
@@ -124,18 +124,18 @@ module "lab-VM-provision" {
 }
 
 data "template_file" "outputs" {
-  count = length(var.rg_list)
-  template = templatefile("data/outputs.tpl", {
+  count = length(var.rg_list) 
+  template = templatefile("./data/outputs.tpl", {
     ADMIN-USER     = var.admin-username,
     ADMIN-PASSWORD = var.admin-password,
     RG-NAME = local.resource-groups[count.index].name
     RG-LOCATION = local.resource-groups[count.index].location
-    JUMP-IP-LIST   = module.lab-VM-provision[count.index].jump_public_ip_address
+    JUMP-IP-LIST   = join("\n",module.lab-VM-provision[count.index].jump_public_ip_address)
   })
 }
 
 resource "local_file" "outputs" {
   count    = length(var.rg_list)
   content  = data.template_file.outputs[count.index].rendered
-  filename = "outputs/${keys(var.rg_list)[count.index]}.txt"
+  filename = "./outputs/${keys(var.rg_list)[count.index]}.txt"
 }

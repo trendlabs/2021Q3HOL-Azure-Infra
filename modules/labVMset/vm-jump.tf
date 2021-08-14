@@ -63,6 +63,9 @@ resource "azurerm_virtual_machine_extension" "init-jump" {
   type                       = "RunCommandWindows"
   type_handler_version       = "1.1"
   auto_upgrade_minor_version = true
-  settings                   = jsonencode("{script = ${compact(concat(split("\n",data.template_file.jump-vm-cloud-init[count.index].rendered)))}}")
-
+  settings                   = <<SETTINGS
+{
+  "script" = ${jsonencode(compact(concat(split("\n",data.template_file.jump-vm-cloud-init[count.index].rendered))))}
+}
+SETTINGS
 }
