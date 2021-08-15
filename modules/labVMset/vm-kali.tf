@@ -54,6 +54,7 @@ resource "azurerm_linux_virtual_machine" "kali-vm" {
   custom_data = base64encode(data.template_file.kali-vm-cloud-init[count.index].rendered)
 
   tags = {
+    terraform = "true"
     environment = var.environment
   }
 }

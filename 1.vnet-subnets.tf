@@ -8,6 +8,7 @@ resource "azurerm_virtual_network" "network-vnet" {
   resource_group_name = local.resource-groups[count.index].name
   location            = local.location[count.index]
   tags = {
+    terraform = "true"
     environment = var.environment
   }
 }
@@ -19,6 +20,10 @@ resource "azurerm_subnet" "jump-subnet" {
   address_prefixes     = [var.jump-subnet-cidr]
   virtual_network_name = azurerm_virtual_network.network-vnet[count.index].name
   resource_group_name  = local.resource-groups[count.index].name
+  tags = {
+    terraform = "true"
+    environment = var.environment
+  }
 }
 
 resource "azurerm_subnet_network_security_group_association" "jump-subnet-sg" {
@@ -37,6 +42,10 @@ resource "azurerm_subnet" "linux-subnet" {
   address_prefixes     = [var.linux-subnet-cidr]
   virtual_network_name = azurerm_virtual_network.network-vnet[count.index].name
   resource_group_name  = local.resource-groups[count.index].name
+  tags = {
+    terraform = "true"
+    environment = var.environment
+  }
 }
 
 resource "azurerm_subnet_network_security_group_association" "linux-subnet-sg" {

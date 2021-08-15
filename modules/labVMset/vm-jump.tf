@@ -47,7 +47,7 @@ resource "azurerm_windows_virtual_machine" "jump-vm" {
   provision_vm_agent       = true
 
   tags = {
-
+    terraform = "true"
     environment = var.environment
   }
 }

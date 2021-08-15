@@ -50,6 +50,7 @@ resource "azurerm_linux_virtual_machine" "centos-vm" {
   admin_password = var.admin-password
 
   tags = {
+    terraform = "true"
     environment = var.environment
   }
 }

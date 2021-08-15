@@ -56,6 +56,7 @@ resource "azurerm_linux_virtual_machine" "dvwa-vm" {
   computer_name = "DVWA-${count.index+1}"
 
   tags = {
+    terraform = "true"
     environment = var.environment
   }
 }

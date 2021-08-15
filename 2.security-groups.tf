@@ -37,6 +37,7 @@ resource "azurerm_network_security_group" "jump-vm-nsg" {
   }
 
   tags = {
+    terraform = "true"
     environment = var.environment
   }
 }
@@ -65,6 +66,7 @@ resource "azurerm_network_security_group" "linux-vm-nsg" {
     destination_address_prefix = "*"
   }
   tags = {
+    terraform = "true"
     environment = var.environment
   }
 }

@@ -15,6 +15,7 @@ resource "azurerm_network_interface" "centos-vm-nic" {
     create = "10m"
   }
   tags = {
+    terraform = "true"
     environment = var.environment
   }
 }
@@ -36,6 +37,7 @@ resource "azurerm_network_interface" "dvwa-vm-nic" {
     create = "10m"
   }
   tags = {
+    terraform = "true"
     environment = var.environment
   }
 }
@@ -49,6 +51,7 @@ resource "azurerm_public_ip" "jump-public-ip" {
   allocation_method   = "Static"
 
   tags = {
+    terraform = "true"
     environment = var.environment
   }
 }
@@ -70,6 +73,7 @@ resource "azurerm_network_interface" "jump-vm-nic" {
     create = "10m"
   }
   tags = {
+    terraform = "true"
     environment = var.environment
   }
 }
@@ -93,6 +97,7 @@ resource "azurerm_network_interface" "kali-vm-nic" {
   }
 
   tags = {
+    terraform = "true"
     environment = var.environment
   }
 }

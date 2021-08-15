@@ -1,9 +1,7 @@
-net accounts /maxpwage:UNLIMITED
-net user '${ADMIN-USER}' '${ADMIN-PASSWORD}' /ADD /PASSWORDCHG:NO /FULLNAME:'HOL Admin' /Y
-net localgroup administrators ${ADMIN-USER} /add
 New-Item -itemtype directory -path "c:\" -name "www"
 Set-NetFirewallProfile -All -Enabled False
-Set-ExecutionPolicy Allsigned; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+
 choco install googlechrome mobaxterm -y --ignore-checksum
 $keycontent=@"
 ${PRIV-KEY}

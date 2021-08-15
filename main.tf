@@ -35,6 +35,10 @@ resource "azurerm_resource_group" "rg" {
   count    = (var.create-rgs) ? length(var.rg_list) : 0
   name     = local.resource-groups[count.index].name
   location = local.resource-groups[count.index].location
+  tags = {
+    terraform = "true"
+    environment = var.environment
+  }
 }
 
 # Get resource group data

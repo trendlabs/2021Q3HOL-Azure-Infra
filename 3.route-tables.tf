@@ -11,6 +11,10 @@ resource "azurerm_route_table" "jump-2-linux" {
     address_prefix = var.linux-subnet-cidr
     next_hop_type  = "vnetlocal"
   }
+  tags = {
+    terraform = "true"
+    environment = var.environment
+  }
 }
 
 resource "azurerm_subnet_route_table_association" "jump-2-linux" {
@@ -34,6 +38,10 @@ resource "azurerm_route_table" "linux-2-jump" {
     next_hop_type  = "vnetlocal"
   }
 
+  tags = {
+    terraform = "true"
+    environment = var.environment
+  }
 }
 
 resource "azurerm_subnet_route_table_association" "linux-2-jump" {
