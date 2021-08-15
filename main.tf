@@ -11,10 +11,11 @@ locals {
     }
   ]) : flatten([
     for name in keys(var.rg_list)[*] : {
-      name     = name
+      name     = "${name}"
       location = null
     }
-  ])
+  ]) 
+
   location = (var.create-rgs) ? local.resource-groups[*].location : data.azurerm_resource_group.lab-rg[*].location
 }
 
@@ -129,12 +130,8 @@ data "template_file" "outputs" {
     ADMIN-USER     = var.admin-username,
     ADMIN-PASSWORD = var.admin-password,
     RG-NAME = local.resource-groups[count.index].name
-    RG-LOCATION = local.resource-groups[count.index].location
-<<<<<<< HEAD
+    RG-LOCATION = local.location[count.index]
     JUMP-IP-LIST   = join("\n", module.lab-VM-provision[count.index].jump_public_ip_address)
-=======
-    JUMP-IP-LIST   = join("\n", module.lab-VM-provision[count.index].jump_public_ip_address)
->>>>>>> e4052b8beb860cd3fbf26ad46f510958bdcefeb5
   })
 }
 

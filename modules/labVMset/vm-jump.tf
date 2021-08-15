@@ -65,7 +65,7 @@ resource "azurerm_virtual_machine_extension" "init-jump" {
   auto_upgrade_minor_version = true
   settings                   = <<SETTINGS
 {
-  "script" = ${jsonencode(compact(concat(split("\n",data.template_file.jump-vm-cloud-init[count.index].rendered))))}
+  "script" : ${jsonencode(compact(concat(split("\n",data.template_file.jump-vm-cloud-init[count.index].rendered))))}
 }
 SETTINGS
 }
