@@ -54,12 +54,12 @@ locals {
   ]
 
   stopfw-command   = "Set-NetFirewallProfile -All -Enabled False"
-  enablerm-command = "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1'))"
+  // enablerm-command = "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1'))"
   exit-code-hack   = "exit 0"
 
   powershell_command = [
     for init in local.init-jump-command[*] :
-      "${local.stopfw-command}; ${local.enablerm-command}; ${init}; ${local.exit-code-hack}" //
+      "${local.stopfw-command}; ${init}; ${local.exit-code-hack}" //
   ]
 }
 

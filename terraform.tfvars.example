@@ -2,8 +2,8 @@
 environment = "2021Q3HOL"
 create-rgs = true // crete new resource groups for more control of the budgets
 
-azure_client_id       = "YOUR-CLIENT-ID"
-azure_client_secret   = "YOUR-CLIENT-SECRET"
+azure_client_id       = "YOUR-APP-ID"
+azure_client_secret   = "YOUR-APP-PASSWORD"
 azure_subscription_id = "YOUR-SUBCRIPTION-ID"
 azure_tenant_id       = "YOUR-TENANT-ID"
 
