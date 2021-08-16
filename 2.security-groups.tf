@@ -22,20 +22,6 @@ resource "azurerm_network_security_group" "jump-vm-nsg" {
     destination_address_prefix = "*"
   }
 
-  //allow All from vNet subnets to Jump
-  security_rule {
-    name                       = "allow-all-internal-to-jump"
-    description                = "Allow all traffic from vNet Subnets"
-    priority                   = 110
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "*"
-    source_address_prefix      = var.network-vnet-cidr
-    destination_address_prefix = "*"
-  }
-
   tags = {
     terraform   = "true"
     environment = var.environment
@@ -52,19 +38,6 @@ resource "azurerm_network_security_group" "linux-vm-nsg" {
   location            = local.location[count.index]
   resource_group_name = local.resource-groups[count.index].name
 
-  //allow all from vnet
-  security_rule {
-    name                       = "allow-all-internal-traffic-"
-    description                = "All all internal traffic originated within vNet"
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "*"
-    source_address_prefix      = var.network-vnet-cidr
-    destination_address_prefix = "*"
-  }
   tags = {
     terraform   = "true"
     environment = var.environment
