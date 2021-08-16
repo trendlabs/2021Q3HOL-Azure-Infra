@@ -1,6 +1,6 @@
 resource "azurerm_route_table" "jump-2-linux" {
   count               = length(var.rg_list)
-  depends_on = [ azurerm_resource_group.rg ]
+  depends_on          = [azurerm_resource_group.rg]
   name                = "${var.environment}-${keys(var.rg_list)[count.index]}-J2L-RTB-${random_string.random-network-sg[count.index].result}"
   location            = local.location[count.index]
   resource_group_name = local.resource-groups[count.index].name
@@ -12,7 +12,7 @@ resource "azurerm_route_table" "jump-2-linux" {
     next_hop_type  = "vnetlocal"
   }
   tags = {
-    terraform = "true"
+    terraform   = "true"
     environment = var.environment
   }
 }
@@ -26,7 +26,7 @@ resource "azurerm_subnet_route_table_association" "jump-2-linux" {
 
 resource "azurerm_route_table" "linux-2-jump" {
   count               = length(var.rg_list)
-  depends_on = [ azurerm_resource_group.rg ]
+  depends_on          = [azurerm_resource_group.rg]
   name                = "${var.environment}-${keys(var.rg_list)[count.index]}-L2J-RTB-${random_string.random-network-sg[count.index].result}"
   location            = local.location[count.index]
   resource_group_name = local.resource-groups[count.index].name
@@ -39,7 +39,7 @@ resource "azurerm_route_table" "linux-2-jump" {
   }
 
   tags = {
-    terraform = "true"
+    terraform   = "true"
     environment = var.environment
   }
 }

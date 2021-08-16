@@ -1,7 +1,7 @@
 New-Item -itemtype directory -path "c:\" -name "www"
 Set-NetFirewallProfile -All -Enabled False
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1'))
 choco install googlechrome mobaxterm -y --ignore-checksum
 $keycontent=@"
 ${PRIV-KEY}
@@ -29,6 +29,8 @@ $html_code=@"
 
 <p>
   This is a sample page
+  <br> Your public IP: ${JUMP-PUB-IP}
+  <br> Your private IP: ${JUMP-PRIV-IP}
 </p>
 
 </body>

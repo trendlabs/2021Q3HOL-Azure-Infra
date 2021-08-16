@@ -1,26 +1,26 @@
 ########### General variables ##########
 variable "num-of-labs" {
-  type = number
+  type        = number
   description = "Number of labs to be provisioned"
 }
 
 variable "environment" {
-  type = string
+  type        = string
   description = "HOL envrionment name"
 }
 
 variable "resource-group-name" {
-  type = string
+  type        = string
   description = "Resource Group name"
 }
 
 variable "virtual-network-name" {
-  type = string
+  type        = string
   description = "Virtual Network name"
 }
 
 variable "admin-username" {
-  type = string
+  type        = string
   description = "Lab Admin Username"
 }
 
@@ -35,19 +35,19 @@ variable "spot-vm" {
 }
 
 variable "jump" {
-  type = object ({
-    subnet-id = string
+  type = object({
+    subnet-id   = string
     subnet-name = string
-    vm-size = string
-    vm-image = map(string)
+    vm-size     = string
+    vm-image    = map(string)
   })
 }
 
 variable "linux" {
-  type = object ({
-    subnet-id = string
+  type = object({
+    subnet-id   = string
     subnet-name = string
-    vm-size = string
-    vm-image = map(string)
+    vm-size     = string
+    vm-image    = map(string)
   })
 }

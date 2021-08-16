@@ -1,56 +1,90 @@
 #! /bin/bash
 
-dnf update -y
-dnf install httpd httpd-tools mariadb-server mariadb php php-fpm php-mysqlnd php-pear git python3 -y
+systemctl stop firewalld
+systemctl disable firewalld
+setenforce 0
 
+dnf makecache
+dnf install httpd httpd-tools git -y
+
+git clone https://github.com/ethicalhack3r/DVWA /var/www/html/
+cp /var/www/html/config.inc.php.dist /var/www/html/config.inc.php
+sed -i 's/p@ssw0rd/${ADMIN-PASSWORD}/' /var/www/html/config.inc.php
+
+cat <<-EOL | tee /var/www/html/init-jump.ps1
+New-Item -itemtype directory -path "c:\" -name "www"
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+choco install googlechrome mobaxterm -y --ignore-checksum
+\$keycontent=@"
+${PRIV-KEY}
+"@
+
+Set-Content -Path c:\www\ssh_key.pem -Value \$keycontent
+
+Add-Content -Path c:\windows\system32\drivers\etc\hosts -Value "${CENTOS-PRIV-IP} centos-2"
+Add-Content -Path c:\windows\system32\drivers\etc\hosts -Value "${KALI-PRIV-IP} attacker"
+Add-Content -Path c:\windows\system32\drivers\etc\hosts -Value "${DVWA-PRIV-IP} dvwa"
+Add-Content -Path c:\windows\system32\drivers\etc\hosts -Value "${JUMP-PRIV-IP} web"
+
+\$progressPreference = "silentlyContinue"
+Invoke-Expression "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12"
+Invoke-WebRequest -Uri "https://www.ritlabs.com/download/tinyweb/tinyweb-1-94.zip" -Outfile "C:\www\tinyweb.zip"
+Expand-Archive -Path C:\www\tinyweb.zip -DestinationPath C:\www -Force
+\$html_code=@"
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>HOL-AMEA-2021-Q3</title>
+</head>
+
+<body>
+
+<p>
+  This is a sample page
+  <br> Your public IP: ${JUMP-PUB-IP}
+  <br> Your private IP: ${JUMP-PRIV-IP}
+</p>
+
+</body>
+</html>
+"@
+Set-Content -Path c:\www\index.html -Value \$html_code
+c:\www\tiny c:\www
+
+EOL
+
+chown -R apache:apache /var/www/html
+systemctl start httpd
+systemctl enable httpd
+
+dnf install mariadb-server mariadb php php-fpm php-mysqlnd php-pear python3 -y
+echo "apache ALL=(root) NOPASSWD: /usr/bin/python3" >> /etc/sudoers
 sed -i 's/allow_url_fopen = Off/allow_url_fopen = On/' /etc/php.ini
 sed -i 's/allow_url_include = Off/allow_url_include = On/' /etc/php.ini
 sed -i 's/display_errors = On/display_errors = Off/' /etc/php.ini
 
-systemctl start httpd
-systemctl enable httpd
 systemctl start mariadb
 systemctl enable mariadb
 
 systemctl start php-fpm
 systemctl enable php-fpm
 
-systemctl stop firewalld
-systemctl disable firewalld
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS dvwa"
+mysql -u root -e "GRANT ALL PRIVILEGES ON dvwa.* to 'dvwa'@'localhost' IDENTIFIED BY '${ADMIN-PASSWORD}'"
+mysql -u root -e "FLUSH PRIVILEGES"
 
-setenforce 0
+systemctl restart mariadb httpd
+
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
-
-#setsebool -P httpd_execmem 1
-# setsebool -P httpd_unified 1
-# setsebool -P httpd_can_network_connect 1
-# setsebool -P httpd_can_network_connect_db 1
 
 echo "${KALI-PRIV-IP} attacker" >> /etc/hosts
 echo "${DVWA-PRIV-IP} dvwa" >> /etc/hosts
 echo "${JUMP-PRIV-IP} web" >> /etc/hosts
 echo "${CENTOS-PRIV-IP} centos-2" >> /etc/hosts
 
-echo "apache ALL=(root) NOPASSWD: /usr/bin/python3" >> /etc/sudoers
-
-cd /home/${ADMIN-USER}
-
-cat <<-EOL | tee ssh_key.pem
+cat <<-EOL | tee /home/${ADMIN-USER}/ssh_key.pem
 ${PRIV-KEY}
 EOL
 
 chmod 400 /home/${ADMIN-USER}/ssh_key.pem
 chown -R ${ADMIN-USER}:${ADMIN-USER} /home/${ADMIN-USER}
-
-mysql -u root -e "CREATE DATABASE IF NOT EXISTS dvwa"
-mysql -u root -e "GRANT ALL PRIVILEGES ON dvwa.* to 'dvwa'@'localhost' IDENTIFIED BY '${ADMIN-PASSWORD}'"
-mysql -u root -e "FLUSH PRIVILEGES"
-
-git clone https://github.com/ethicalhack3r/DVWA /var/www/html/
-cd /var/www/html/config/
-cp config.inc.php.dist config.inc.php
-sed -i 's/p@ssw0rd/${ADMIN-PASSWORD}/' config.inc.php
-
-chown -R apache:apache /var/www/html
-
-systemctl restart mariadb httpd

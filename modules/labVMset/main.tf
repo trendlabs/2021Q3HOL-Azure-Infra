@@ -1,6 +1,6 @@
 locals {
-  location = data.azurerm_resource_group.lab-rg.location  
-  prefix = format("%s-%s", var.environment, replace(var.resource-group-name,"${var.environment}-",""))
+  location = data.azurerm_resource_group.lab-rg.location
+  prefix   = format("%s-%s", var.environment, replace(var.resource-group-name, "${var.environment}-", ""))
 }
 
 // Get resource group data
@@ -10,8 +10,8 @@ data "azurerm_resource_group" "lab-rg" {
 
 data "azurerm_virtual_network" "lab-vnet" {
 
-  name = var.virtual-network-name
-  resource_group_name  = var.resource-group-name
+  name                = var.virtual-network-name
+  resource_group_name = var.resource-group-name
 }
 
 data "azurerm_subnet" "jump-subnet" {
@@ -43,24 +43,23 @@ resource "random_string" "random-lab-vm" {
 }
 
 resource "tls_private_key" "private-key" {
-  count = var.num-of-labs
   algorithm = "RSA"
   rsa_bits  = 4096
 }
 
 module "labvNic" {
 
-  count = var.num-of-labs
+  count  = var.num-of-labs
   source = "./labvNicset"
 
-  environment = var.environment
+  environment         = var.environment
   resource-group-name = var.resource-group-name
-  location = local.location
+  location            = local.location
 
-  jump-subnet-id = var.jump.subnet-id
+  jump-subnet-id  = var.jump.subnet-id
   linux-subnet-id = var.linux.subnet-id
 
   prefix = local.prefix
-  suffix = "${count.index+1}-${random_string.random-lab-vm[count.index].result}"
+  suffix = "${count.index + 1}-${random_string.random-lab-vm[count.index].result}"
 
 }

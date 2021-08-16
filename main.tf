@@ -9,12 +9,12 @@ locals {
       name     = "${var.environment}-${name}"
       location = "Australia Central"
     }
-  ]) : flatten([
+    ]) : flatten([
     for name in keys(var.rg_list)[*] : {
       name     = "${name}"
       location = null
     }
-  ]) 
+  ])
 
   location = (var.create-rgs) ? local.resource-groups[*].location : data.azurerm_resource_group.lab-rg[*].location
 }
@@ -36,7 +36,7 @@ resource "azurerm_resource_group" "rg" {
   name     = local.resource-groups[count.index].name
   location = local.resource-groups[count.index].location
   tags = {
-    terraform = "true"
+    terraform   = "true"
     environment = var.environment
   }
 }
@@ -101,7 +101,7 @@ module "lab-VM-provision" {
     vm-size     = "Standard_D4s_v4"
     # 4vCPU & 16GbRAM & ACU 195
     # Central US Spot Windows price ~$0.19641/hour
-    # Australia Central Spot Windows price ~0.069485/hour 
+    # Australia Central Spot Windows price ~0.069485/hour
     vm-image = {
       publisher = "MicrosoftWindowsServer"
       offer     = "WindowsServer"
@@ -117,7 +117,7 @@ module "lab-VM-provision" {
     vm-size     = "Standard_D2s_v4"
     # 2vCPU & 8GbRAM & ACU 195
     # Central US Spot CentOS price ~$0.020774/hour
-    # Australia Central Spot price ~$0.0139/hour 
+    # Australia Central Spot price ~$0.0139/hour
     vm-image = {
       publisher = "OpenLogic"
       offer     = "CentOS"
@@ -129,12 +129,12 @@ module "lab-VM-provision" {
 }
 
 data "template_file" "outputs" {
-  count = length(var.rg_list) 
-  template = templatefile("./data/outputs.tpl", {
+  count = length(var.rg_list)
+  template = templatefile("./outputs/outputs.tpl", {
     ADMIN-USER     = var.admin-username,
     ADMIN-PASSWORD = var.admin-password,
-    RG-NAME = local.resource-groups[count.index].name
-    RG-LOCATION = local.location[count.index]
+    RG-NAME        = local.resource-groups[count.index].name
+    RG-LOCATION    = local.location[count.index]
     JUMP-IP-LIST   = join("\n", module.lab-VM-provision[count.index].jump_public_ip_address)
   })
 }

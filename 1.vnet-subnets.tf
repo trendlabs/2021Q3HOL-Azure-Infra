@@ -2,13 +2,13 @@
 # Create the network VNET
 resource "azurerm_virtual_network" "network-vnet" {
   count               = length(var.rg_list)
-  depends_on = [ azurerm_resource_group.rg ]
+  depends_on          = [azurerm_resource_group.rg]
   name                = "${var.environment}-${keys(var.rg_list)[count.index]}-VNET-${random_string.random-network-sg[count.index].result}"
   address_space       = [var.network-vnet-cidr]
   resource_group_name = local.resource-groups[count.index].name
   location            = local.location[count.index]
   tags = {
-    terraform = "true"
+    terraform   = "true"
     environment = var.environment
   }
 }
@@ -20,7 +20,7 @@ resource "azurerm_subnet" "jump-subnet" {
   address_prefixes     = [var.jump-subnet-cidr]
   virtual_network_name = azurerm_virtual_network.network-vnet[count.index].name
   resource_group_name  = local.resource-groups[count.index].name
- 
+
 }
 
 resource "azurerm_subnet_network_security_group_association" "jump-subnet-sg" {

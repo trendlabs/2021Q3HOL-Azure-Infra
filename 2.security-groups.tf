@@ -1,8 +1,8 @@
 # Create Network Security Group to Access Jump VM from Internet
 resource "azurerm_network_security_group" "jump-vm-nsg" {
 
-  count = length(var.rg_list)
-  depends_on = [ azurerm_resource_group.rg ]
+  count      = length(var.rg_list)
+  depends_on = [azurerm_resource_group.rg]
 
   name                = "${var.environment}-${keys(var.rg_list)[count.index]}-JUMP-nsg-${random_string.random-network-sg[count.index].result}"
   location            = local.location[count.index]
@@ -37,7 +37,7 @@ resource "azurerm_network_security_group" "jump-vm-nsg" {
   }
 
   tags = {
-    terraform = "true"
+    terraform   = "true"
     environment = var.environment
   }
 }
@@ -45,9 +45,9 @@ resource "azurerm_network_security_group" "jump-vm-nsg" {
 # Create Network Security Group to Access web VM from Internet
 resource "azurerm_network_security_group" "linux-vm-nsg" {
 
-  count = length(var.rg_list)
-  depends_on = [ azurerm_resource_group.rg ]
-  
+  count      = length(var.rg_list)
+  depends_on = [azurerm_resource_group.rg]
+
   name                = "${var.environment}-${keys(var.rg_list)[count.index]}-LINUX-nsg-${random_string.random-network-sg[count.index].result}"
   location            = local.location[count.index]
   resource_group_name = local.resource-groups[count.index].name
@@ -66,7 +66,7 @@ resource "azurerm_network_security_group" "linux-vm-nsg" {
     destination_address_prefix = "*"
   }
   tags = {
-    terraform = "true"
+    terraform   = "true"
     environment = var.environment
   }
 }
