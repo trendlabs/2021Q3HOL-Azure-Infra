@@ -2,8 +2,8 @@
 
 #dnf update -y
 dnf makecache
-dnf install python3 python3-pip epel-release ansible -y
-pip install pywinrm
+dnf install python3 python3-pip epel-release -y
+pip3 install ansible --user
 
 systemctl stop firewalld
 systemctl disable firewalld
@@ -50,6 +50,7 @@ EOL
 cat <<-EOL | tee init-jump.ps1
 New-Item -itemtype directory -path "c:\" -name "www"
 Set-NetFirewallProfile -All -Enabled False
+Set-MpPreference -DisableRealtimeMonitoring \$true
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 choco install googlechrome mobaxterm -y --ignore-checksum
 \$keycontent=@"

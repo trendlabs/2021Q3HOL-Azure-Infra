@@ -80,7 +80,7 @@ in the output, note the below for terraform to run
   $ terraform apply -auto-approve -parallelism=50 tfplan
 ```
 if there are some errors during the apply process, you need to review variables you set in the terraform.tfvars to make sure everything is correctly set, the run the last command again, or destroy (with command below) and run 2 last commands again
-*Note: terraform needs about 45-60min to provision labs (depends on the number of labs)*
+*Note: terraform needs about 25-60min to provision labs (depends on the number of labs)*
 - After infra provisioned, make sure a file ***terraform.tfstate*** generated in the same folder. This file is critical for your to clean up all the labs after the session
 - When you finish the hands-on, to clean-up all the infra, run below:
 ```

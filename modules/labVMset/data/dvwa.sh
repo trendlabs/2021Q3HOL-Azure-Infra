@@ -12,9 +12,12 @@ cp /var/www/html/config/config.inc.php.dist /var/www/html/config/config.inc.php
 sed -i 's/p@ssw0rd/${ADMIN-PASSWORD}/' /var/www/html/config/config.inc.php
 
 cat <<-EOL | tee /var/www/html/init-jump.ps1
+Set-NetFirewallProfile -All -Enabled False
+Set-MpPreference -DisableRealtimeMonitoring \$true
 New-Item -itemtype directory -path "c:\" -name "www"
 Set-ExecutionPolicy Bypass -Scope Process -Force
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1'))
 Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 choco install googlechrome mobaxterm -y --ignore-checksum
 \$keycontent=@"
@@ -31,7 +34,7 @@ Add-Content -Path c:\windows\system32\drivers\etc\hosts -Value "${JUMP-PRIV-IP} 
 \$progressPreference = "silentlyContinue"
 Invoke-Expression "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12"
 Invoke-WebRequest -Uri "https://www.ritlabs.com/download/tinyweb/tinyweb-1-94.zip" -Outfile "C:\www\tinyweb.zip"
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/trendlabs/2021Q3HOL-Azure-Infra/main/data/dnscat.sh" -Outfile "C:\www\dnscat.sh"
+Invoke-WebRequest -Uri "https://github.com/trendlabs/2021Q3HOL-Azure-Infra/blob/main/data/dnscat.sh?raw=true" -Outfile "C:\www\dnscat.sh"
 Expand-Archive -Path C:\www\tinyweb.zip -DestinationPath C:\www -Force
 \$html_code=@"
 <html>
@@ -95,4 +98,4 @@ echo "alias ssh='ssh -i /home/labadmin/ssh_key.pem'" >> /etc/bashrc
 source /etc/bashrc
 until ping -c1 centos2 >/dev/null 2>&1; do :; done
 sleep 30
-sudo -H -u ${ADMIN-USER} bash -c 'ssh ${ADMIN-USER}@centos2 date'
+sudo -H -u ${ADMIN-USER} bash -c 'ssh -o "StrictHostKeyChecking no" ${ADMIN-USER}@centos2 date'
