@@ -42,7 +42,7 @@ resource "azurerm_windows_virtual_machine" "jump-vm" {
 # wait for jump ready
 resource "time_sleep" "wait-for-jump-vm" {
 
-  create_duration = "30s"
+  create_duration = "60s"
 
   depends_on = [azurerm_windows_virtual_machine.jump-vm]
 }
@@ -50,16 +50,16 @@ resource "time_sleep" "wait-for-jump-vm" {
 locals {
   init-jump-command = [
     for ip in module.labvNic[*].dvwa-vnic.ip :
-      "Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('http://${ip}/init-jump.ps1'))"
+      "do { Start-Sleep -s 10; $dvwaStatus = Invoke-WebRequest http://${ip}/init-jump.ps1 -DisableKeepAlive -UseBasicParsing -Method head | ForEach-Object {$PSItem.StatusCode}} while($dvwaStatus -ne 200);Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('http://${ip}/init-jump.ps1'))"
   ]
 
   stopfw-command   = "Set-NetFirewallProfile -All -Enabled False"
-  // enablerm-command = "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1'))"
+  enablerm-command = "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1'))"
   exit-code-hack   = "exit 0"
 
   powershell_command = [
     for init in local.init-jump-command[*] :
-      "${local.stopfw-command}; ${init}; ${local.exit-code-hack}" //
+      "${local.stopfw-command}; ${local.enablerm-command}; ${init}; ${local.exit-code-hack}" //
   ]
 }
 

@@ -65,7 +65,7 @@ resource "azurerm_linux_virtual_machine" "dvwa-vm" {
 # wait for dvwa ready
 resource "time_sleep" "wait-for-dvwa-vm" {
 
-  create_duration = "5m"
+  create_duration = "3m"
 
   depends_on = [azurerm_linux_virtual_machine.dvwa-vm]
 }

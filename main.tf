@@ -82,11 +82,11 @@ module "lab-VM-provision" {
   source = "./modules/labVMset"
 
   environment    = var.environment
-  admin-username = var.admin-username //"labadmin"
-  admin-password = var.admin-password //"P0stM4st3r"
+  admin-username = var.admin-username
+  admin-password = var.admin-password
 
-  resource-group-name = local.resource-groups[count.index].name //keys(var.rg_list)[count.index]   // get the rg_list key name (which is resource group name)
-  num-of-labs         = values(var.rg_list)[count.index]        // get num oflabs to be provisioned in each resource group
+  resource-group-name = local.resource-groups[count.index].name 
+  num-of-labs         = values(var.rg_list)[count.index]
 
   virtual-network-name = azurerm_virtual_network.network-vnet[count.index].name
 

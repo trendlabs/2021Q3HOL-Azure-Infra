@@ -55,3 +55,5 @@ ${PRIV-KEY}
 EOL
 
 chmod 400 ssh_key.pem
+echo "alias ssh='ssh -i /home/labadmin/ssh_key.pem'" >> /etc/bashrc
+source /etc/bashrc

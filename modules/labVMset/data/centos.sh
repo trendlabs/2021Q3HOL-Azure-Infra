@@ -1,6 +1,6 @@
 #! /bin/bash
 
-dnf update -y
+#dnf update -y
 dnf makecache
 dnf install python3 python3-pip epel-release ansible -y
 pip install pywinrm
@@ -14,13 +14,14 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
 echo "${KALI-PRIV-IP} attacker" >> /etc/hosts
 echo "${DVWA-PRIV-IP} dvwa" >> /etc/hosts
 echo "${JUMP-PRIV-IP} web" >> /etc/hosts
-echo "${CENTOS-PRIV-IP} centos-2" >> /etc/hosts
+echo "${CENTOS-PRIV-IP} centos2" >> /etc/hosts
 
 cat <<-EOL | tee /home/${ADMIN-USER}/ssh_key.pem
 ${PRIV-KEY}
 EOL
 chmod 400 /home/${ADMIN-USER}/ssh_key.pem
-
+echo "alias ssh='ssh -i /home/labadmin/ssh_key.pem'" >> /etc/bashrc
+source /etc/bashrc
 mkdir /home/${ADMIN-USER}/ansible
 cd  /home/${ADMIN-USER}/ansible
 cat <<-EOL | tee ansible_hosts
@@ -50,7 +51,6 @@ cat <<-EOL | tee init-jump.ps1
 New-Item -itemtype directory -path "c:\" -name "www"
 Set-NetFirewallProfile -All -Enabled False
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1'))
 choco install googlechrome mobaxterm -y --ignore-checksum
 \$keycontent=@"
 ${PRIV-KEY}
@@ -58,7 +58,7 @@ ${PRIV-KEY}
 
 Set-Content -Path c:\www\ssh_key.pem -Value \$keycontent
 
-Add-Content -Path c:\windows\system32\drivers\etc\hosts -Value "${CENTOS-PRIV-IP} centos-2"
+Add-Content -Path c:\windows\system32\drivers\etc\hosts -Value "${CENTOS-PRIV-IP} centos2"
 Add-Content -Path c:\windows\system32\drivers\etc\hosts -Value "${KALI-PRIV-IP} attacker"
 Add-Content -Path c:\windows\system32\drivers\etc\hosts -Value "${DVWA-PRIV-IP} dvwa"
 Add-Content -Path c:\windows\system32\drivers\etc\hosts -Value "${JUMP-PRIV-IP} web"
@@ -78,8 +78,8 @@ Expand-Archive -Path C:\www\tinyweb.zip -DestinationPath C:\www -Force
 
 <p>
   This is a sample page
-  <br> Your public IP: ${JUMP-PUB-IP}
-  <br> Your private IP: ${JUMP-PRIV-IP}
+  <br> Web Server Public IP: ${JUMP-PUB-IP}
+  <br> Web Server Private IP: ${JUMP-PRIV-IP}
 </p>
 
 </body>

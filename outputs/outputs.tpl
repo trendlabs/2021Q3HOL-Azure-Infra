@@ -4,6 +4,8 @@ Your Resource Group Location: ${RG-LOCATION}
 1. Jump public IP list:
 ${JUMP-IP-LIST}
 
+Jump machine will serve as web server for the lab. The webroot is C:\www
+
 2. Jump RDP Account
 - Username: ${ADMIN-USER}
 - Password: ${ADMIN-PASSWORD}
