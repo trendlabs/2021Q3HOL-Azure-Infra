@@ -2,7 +2,7 @@ resource "azurerm_route_table" "jump-2-linux" {
   count               = length(var.rg_list)
   depends_on          = [azurerm_resource_group.rg]
   name                = "${var.environment}-${keys(var.rg_list)[count.index]}-J2L-RTB-${random_string.random-network-sg[count.index].result}"
-  location            = local.location[count.index]
+  location            = local.resource-groups[count.index].location
   resource_group_name = local.resource-groups[count.index].name
   //disable_bgp_route_propagation = false
 
@@ -28,7 +28,7 @@ resource "azurerm_route_table" "linux-2-jump" {
   count               = length(var.rg_list)
   depends_on          = [azurerm_resource_group.rg]
   name                = "${var.environment}-${keys(var.rg_list)[count.index]}-L2J-RTB-${random_string.random-network-sg[count.index].result}"
-  location            = local.location[count.index]
+  location            = local.resource-groups[count.index].location
   resource_group_name = local.resource-groups[count.index].name
   //disable_bgp_route_propagation = false
 

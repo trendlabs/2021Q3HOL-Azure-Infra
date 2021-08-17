@@ -6,7 +6,7 @@ resource "azurerm_virtual_network" "network-vnet" {
   name                = "${var.environment}-${keys(var.rg_list)[count.index]}-VNET-${random_string.random-network-sg[count.index].result}"
   address_space       = [var.network-vnet-cidr]
   resource_group_name = local.resource-groups[count.index].name
-  location            = local.location[count.index]
+  location            = local.resource-groups[count.index].location
   tags = {
     terraform   = "true"
     environment = var.environment

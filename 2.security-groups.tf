@@ -5,7 +5,7 @@ resource "azurerm_network_security_group" "jump-vm-nsg" {
   depends_on = [azurerm_resource_group.rg]
 
   name                = "${var.environment}-${keys(var.rg_list)[count.index]}-JUMP-nsg-${random_string.random-network-sg[count.index].result}"
-  location            = local.location[count.index]
+  location            = local.resource-groups[count.index].location
   resource_group_name = local.resource-groups[count.index].name
 
   //allow RDP from internet
@@ -35,7 +35,7 @@ resource "azurerm_network_security_group" "linux-vm-nsg" {
   depends_on = [azurerm_resource_group.rg]
 
   name                = "${var.environment}-${keys(var.rg_list)[count.index]}-LINUX-nsg-${random_string.random-network-sg[count.index].result}"
-  location            = local.location[count.index]
+  location            = local.resource-groups[count.index].location
   resource_group_name = local.resource-groups[count.index].name
 
   tags = {

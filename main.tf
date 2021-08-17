@@ -10,13 +10,13 @@ locals {
       location = "Australia Central"
     }
     ]) : flatten([
-    for name in keys(var.rg_list)[*] : {
-      name     = "${name}"
-      location = null
+    for data in data.azurerm_resource_group.lab-rg[*] : {
+      name     = data.name
+      location = data.location
     }
   ])
 
-  location = (var.create-rgs) ? local.resource-groups[*].location : data.azurerm_resource_group.lab-rg[*].location
+  //location = (var.create-rgs) ? local.resource-groups[*].location : data.azurerm_resource_group.lab-rg[*].location
 }
 
 #Configure the Azure Provider
@@ -46,7 +46,7 @@ data "azurerm_resource_group" "lab-rg" {
 
   count = (var.create-rgs) ? 0 : length(var.rg_list)
 
-  name = local.resource-groups[count.index].name
+  name = keys(var.rg_list)[count.index] //local.resource-groups[count.index].name
 }
 
 # Generate randon name for network resources
@@ -85,7 +85,7 @@ module "lab-VM-provision" {
   admin-username = var.admin-username
   admin-password = var.admin-password
 
-  resource-group-name = local.resource-groups[count.index].name 
+  resource-group-name = local.resource-groups[count.index].name
   num-of-labs         = values(var.rg_list)[count.index]
 
   virtual-network-name = azurerm_virtual_network.network-vnet[count.index].name
@@ -134,7 +134,7 @@ data "template_file" "outputs" {
     ADMIN-USER     = var.admin-username,
     ADMIN-PASSWORD = var.admin-password,
     RG-NAME        = local.resource-groups[count.index].name
-    RG-LOCATION    = local.location[count.index]
+    RG-LOCATION    = local.resource-groups[count.index].location
     JUMP-IP-LIST   = join("\n", module.lab-VM-provision[count.index].jump_public_ip_address)
   })
 }
