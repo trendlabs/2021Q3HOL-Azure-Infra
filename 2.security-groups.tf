@@ -1,3 +1,11 @@
+locals {
+  admin_ip = join("/", [data.http.admin_public_ip.body, "32"])
+}
+# Dynamically retrieve our public outgoing IP
+data "http" "admin_public_ip" {
+  url = "http://ipinfo.io/ip"
+}
+
 # Create Network Security Group to Access Jump VM from Internet
 resource "azurerm_network_security_group" "jump-vm-nsg" {
 
@@ -18,7 +26,7 @@ resource "azurerm_network_security_group" "jump-vm-nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "3389"
-    source_address_prefix      = "Internet"
+    source_address_prefixes      = ["94.203.149.240/32","112.211.224.91/32", "175.137.97.232/32",local.admin_ip]
     destination_address_prefix = "*"
   }
 

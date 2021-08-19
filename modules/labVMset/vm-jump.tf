@@ -48,14 +48,16 @@ resource "time_sleep" "wait-for-jump-vm" {
 }
 
 locals {
+  create-folder-command = "New-Item -Path c:\\\\ -Name www -ItemType directory"
   init-jump-command = [
-    for ip in module.labvNic[*].dvwa-vnic.ip :
-      "do { Start-Sleep -s 10; $dvwaStatus = Invoke-WebRequest http://${ip}/init-jump.ps1 -DisableKeepAlive -UseBasicParsing -Method head | ForEach-Object {$PSItem.StatusCode}} while($dvwaStatus -ne 200);Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('http://${ip}/init-jump.ps1'))"
+    for ip in module.labvNic[*].centos-vnic.ip :
+      "do { Start-Sleep -s 10; $dvwaStatus = Invoke-WebRequest http://${ip}/init-jump.ps1 -UseBasicParsing -Method head | ForEach-Object {$PSItem.StatusCode}} while($dvwaStatus -ne 200);Invoke-WebRequest http://${ip}/init-jump.ps1 -Outfile c:\\\\www\\\\init-jump.ps1;"
   ]
+  invoke-init-command = "Invoke-Expression -Command C:\\\\www\\\\init-jump.ps1"
   exit-code-hack   = "exit 0"
   powershell_command = [
     for init in local.init-jump-command[*] :
-      "${init}; ${local.exit-code-hack}" //
+      "${local.create-folder-command}; ${init}; ${local.invoke-init-command}; ${local.exit-code-hack}" //
   ]
 }
 
@@ -63,7 +65,7 @@ resource "azurerm_virtual_machine_extension" "init-jump" {
 
   depends_on = [
     time_sleep.wait-for-jump-vm,
-    time_sleep.wait-for-dvwa-vm
+    time_sleep.wait-for-centos-vm
   ]
 
   count = var.num-of-labs
@@ -76,7 +78,7 @@ resource "azurerm_virtual_machine_extension" "init-jump" {
 
   settings = <<SETTINGS
     {
-        "commandToExecute": "powershell.exe -Command \"${local.powershell_command[count.index]}\""
+        "commandToExecute": "powershell.exe -Command  \"${local.powershell_command[count.index]}\""
     }
 SETTINGS
-}
+} // \"${local.powershell_command[count.index]}\""

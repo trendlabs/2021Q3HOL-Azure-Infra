@@ -56,3 +56,11 @@ resource "azurerm_linux_virtual_machine" "centos-vm" {
     environment = var.environment
   }
 }
+
+# wait for dvwa ready
+resource "time_sleep" "wait-for-centos-vm" {
+
+  create_duration = "3m"
+
+  depends_on = [azurerm_linux_virtual_machine.centos-vm]
+}

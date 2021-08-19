@@ -84,6 +84,9 @@ module "lab-VM-provision" {
   environment    = var.environment
   admin-username = var.admin-username
   admin-password = var.admin-password
+  
+  install-dvwa = false
+  install-dnscat = false
 
   resource-group-name = local.resource-groups[count.index].name
   num-of-labs         = values(var.rg_list)[count.index]

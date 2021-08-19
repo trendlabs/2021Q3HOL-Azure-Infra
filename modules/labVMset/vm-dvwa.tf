@@ -11,7 +11,8 @@ data "template_file" "dvwa-vm-cloud-init" {
     CENTOS-PRIV-IP = module.labvNic[count.index].centos-vnic.ip,
     DVWA-PRIV-IP   = module.labvNic[count.index].dvwa-vnic.ip,
     JUMP-PRIV-IP   = module.labvNic[count.index].jump-vnic.priv-ip,
-    JUMP-PUB-IP    = module.labvNic[count.index].jump-vnic.pub-ip
+    JUMP-PUB-IP    = module.labvNic[count.index].jump-vnic.pub-ip,
+    DVWA = var.install-dvwa
   })
 }
 
@@ -60,12 +61,4 @@ resource "azurerm_linux_virtual_machine" "dvwa-vm" {
     terraform   = "true"
     environment = var.environment
   }
-}
-
-# wait for dvwa ready
-resource "time_sleep" "wait-for-dvwa-vm" {
-
-  create_duration = "3m"
-
-  depends_on = [azurerm_linux_virtual_machine.dvwa-vm]
 }

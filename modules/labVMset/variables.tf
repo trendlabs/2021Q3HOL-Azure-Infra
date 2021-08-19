@@ -29,6 +29,14 @@ variable "admin-password" {
   description = "Lab Admin Password"
 }
 
+variable "install-dvwa" {
+  type = bool
+}
+
+variable "install-dnscat" {
+  type = bool
+}
+
 ####### Network variables ###############
 variable "spot-vm" {
   type = map(string)

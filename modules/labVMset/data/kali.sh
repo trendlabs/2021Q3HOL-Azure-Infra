@@ -24,6 +24,7 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
 
 cd /home/${ADMIN-USER}
 
+if ${DNSCAT}; then
 git clone https://github.com/iagox86/dnscat2.git
 cd dnscat2/server/
 gem install bundler
@@ -31,7 +32,7 @@ mv /home/${ADMIN-USER}/bin/bundle* /usr/local/bin/
 ln -s /usr/local/bin/bundle /usr/bin/bundle
 ln -s /usr/local/bin/bundler /usr/bin/bundler
 bundle install
-
+fi
 curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose

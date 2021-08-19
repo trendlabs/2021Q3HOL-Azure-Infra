@@ -9,7 +9,8 @@ data "template_file" "kali-vm-cloud-init" {
     KALI-PRIV-IP   = module.labvNic[count.index].kali-vnic.ip,
     CENTOS-PRIV-IP = module.labvNic[count.index].centos-vnic.ip,
     DVWA-PRIV-IP   = module.labvNic[count.index].dvwa-vnic.ip,
-    JUMP-PRIV-IP   = module.labvNic[count.index].jump-vnic.priv-ip
+    JUMP-PRIV-IP   = module.labvNic[count.index].jump-vnic.priv-ip,
+    DNSCAT = var.install-dnscat
   })
 }
 
