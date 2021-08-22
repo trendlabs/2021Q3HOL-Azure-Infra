@@ -51,10 +51,10 @@ chown -R ${ADMIN-USER}:${ADMIN-USER} /home/${ADMIN-USER}/
 sudo -H -u ${ADMIN-USER} bash -c 'msfdb init --use-defaults --component database'
 sudo -H -u ${ADMIN-USER} bash -c 'msfdb init --use-defaults --component webservice'
 
-cat <<-EOL | tee ssh_key.pem
+cat <<-EOL | tee /home/${ADMIN-USER}/ssh_key.pem
 ${PRIV-KEY}
 EOL
 
-chmod 400 ssh_key.pem
-echo "alias ssh='ssh -i /home/labadmin/ssh_key.pem'" >> /etc/bashrc
+chmod 400 /home/${ADMIN-USER}/ssh_key.pem
+echo "alias ssh='ssh -i /home/${ADMIN-USER}/ssh_key.pem'" >> /etc/bashrc
 source /etc/bashrc

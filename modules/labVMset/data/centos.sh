@@ -100,6 +100,6 @@ pip3 install ansible --user
 # until ping -c1 web >/dev/null 2>&1; do :; done
 # sleep 30
 # ansible-playbook init-jump.yaml -i ansible_hosts > ansible_logs
-echo "alias ssh='ssh -i /home/labadmin/ssh_key.pem'" >> /etc/bashrc
+echo "alias ssh='ssh -i /home/${ADMIN-USER}/ssh_key.pem'" >> /etc/bashrc
 source /etc/bashrc
 chown -R ${ADMIN-USER}:${ADMIN-USER} /home/${ADMIN-USER}

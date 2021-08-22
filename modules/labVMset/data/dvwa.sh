@@ -16,7 +16,7 @@ EOL
 
 chmod 400 /home/${ADMIN-USER}/ssh_key.pem
 
-echo "alias ssh='ssh -i /home/labadmin/ssh_key.pem'" >> /etc/bashrc
+echo "alias ssh='ssh -i /home/${ADMIN-USER}/ssh_key.pem'" >> /etc/bashrc
 source /etc/bashrc
 until ping -c1 centos2 >/dev/null 2>&1; do :; done
 sleep 30

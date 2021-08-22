@@ -17,7 +17,11 @@ admin-password = "YOUR-Strong-password"
 rg_list = {
   // need in this format
   // "RG name" = <number of participants in each BU>
-  "TH" = 7,
+  "SG" = 10,
+  "MY" = 8,
+  "ID" = 5,
+  "PH" = 4,
+  "TH" = 8,
   "AE" = 11,
   "VN" = 4
 }
@@ -27,7 +31,10 @@ specialist-ips = {
   // then put list of IP in below section as example here
   // else just put "Internet" for no restriction
   // note the order in this list matches with the order in rg_list above
-  
+  "SG" = ["Internet"],
+  "MY" = ["Internet"],
+  "ID" = ["Internet"],
+  "PH" = ["Internet"],
   "TH" = ["xx.yy.zz.34/32", "xx.yy.zz.240/32" ],
   "AE" = [ "xx.yy.zz.240/32" ],
   "VN" = ["Internet"],
