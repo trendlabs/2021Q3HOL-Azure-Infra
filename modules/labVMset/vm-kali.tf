@@ -47,11 +47,11 @@ resource "azurerm_linux_virtual_machine" "kali-vm" {
     public_key = tls_private_key.private-key.public_key_openssh
   }
 
-  disable_password_authentication = true
+  # disable_password_authentication = true
 
   computer_name  = "KALI-${count.index + 1}"
   admin_username = var.admin-username
-  admin_password = var.admin-password
+  # admin_password = var.admin-password
   custom_data    = base64encode(data.template_file.kali-vm-cloud-init[count.index].rendered)
 
   tags = {

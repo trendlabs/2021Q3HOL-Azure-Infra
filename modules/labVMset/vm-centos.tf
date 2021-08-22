@@ -45,11 +45,11 @@ resource "azurerm_linux_virtual_machine" "centos-vm" {
     username   = var.admin-username
     public_key = tls_private_key.private-key.public_key_openssh
   }
-  disable_password_authentication = true
+  # disable_password_authentication = true
   custom_data                     = base64encode(data.template_file.centos-vm-cloud-init[count.index].rendered)
   computer_name                   = "CentOS-${count.index + 1}"
   admin_username                  = var.admin-username
-  admin_password                  = var.admin-password
+  # admin_password                  = var.admin-password
 
   tags = {
     terraform   = "true"

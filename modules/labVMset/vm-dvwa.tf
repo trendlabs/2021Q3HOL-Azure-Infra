@@ -49,11 +49,11 @@ resource "azurerm_linux_virtual_machine" "dvwa-vm" {
     username   = var.admin-username
     public_key = tls_private_key.private-key.public_key_openssh
   }
-  disable_password_authentication = true
+  #disable_password_authentication = true
   custom_data                     = base64encode(data.template_file.dvwa-vm-cloud-init[count.index].rendered)
 
   admin_username = var.admin-username
-  admin_password = var.admin-password
+  #admin_password = var.admin-password
 
   computer_name = "DVWA-${count.index + 1}"
 
