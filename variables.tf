@@ -62,7 +62,7 @@ variable "rg_list" {
   }
 }
 
-variable "specialist-ips" {
-  type        = map
-  description = "Specialist IP list"
-}
+# variable "specialist-ips" {
+#   type        = map
+#   description = "Specialist IP list"
+# }

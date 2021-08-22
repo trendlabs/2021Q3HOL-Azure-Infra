@@ -26,7 +26,7 @@ resource "azurerm_network_security_group" "jump-vm-nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "3389"
-    source_address_prefixes      = compact(concat(values(var.specialist-ips)[count.index], [local.admin_ip]))
+    source_address_prefix      = "Internet" //compact(concat(values(var.specialist-ips)[count.index], [local.admin_ip]))
     destination_address_prefix = "*"
   }
 

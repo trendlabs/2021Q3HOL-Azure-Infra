@@ -17,25 +17,17 @@ admin-password = "YOUR-Strong-password"
 rg_list = {
   // need in this format
   // "RG name" = <number of participants in each BU>
+  // remove those below that you dont need
   "SG" = 10,
   "MY" = 8,
+  "PAK" = 2,
+  "CLM" = 1,
   "ID" = 5,
   "PH" = 6,
   "TH" = 8,
-  "AE" = 11,
+  "GCC" = 11,
+  "WestIN" = 4,
+  "NorthIN" = 4,
+  "EastIN" = 4,
   "VN" = 4
-}
-
-specialist-ips = {
-  // if you want to restrict connection to RDP from specific IP
-  // then put list of IP in below section as example here
-  // else just put "Internet" for no restriction
-  // note the order in this list matches with the order in rg_list above
-  "SG" = ["Internet"],
-  "MY" = ["Internet"],
-  "ID" = ["Internet"],
-  "PH" = ["Internet"],
-  "TH" = ["xx.yy.zz.34/32", "xx.yy.zz.240/32" ],
-  "AE" = [ "xx.yy.zz.240/32" ],
-  "VN" = ["Internet"],
 }
