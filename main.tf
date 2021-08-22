@@ -49,6 +49,28 @@ data "azurerm_resource_group" "lab-rg" {
   name = keys(var.rg_list)[count.index] //local.resource-groups[count.index].name
 }
 
+data "azuread_group" "APAC-HOL-Specialist" {
+  display_name     = "APAC-HOL-Specialist"
+  security_enabled = true
+}
+
+#grant access to rg
+resource "azurerm_role_assignment" "rg-grant-access" {
+  count = length(var.rg_list)
+  scope                = (var.create-rgs) ? azurerm_resource_group.rg[count.index].id : data.azurerm_resource_group.lab-rg[count.index].id
+  role_definition_name = "Contributor"
+  principal_id         = data.azuread_group.APAC-HOL-Specialist.id
+}
+#
+# #grant access to nsg
+resource "azurerm_role_assignment" "nsg-grant-access" {
+  count = length(var.rg_list)
+  
+  scope                = azurerm_network_security_group.jump-vm-nsg[count.index].id
+  role_definition_name = "Contributor"
+  principal_id         = data.azuread_group.APAC-HOL-Specialist.id
+}
+
 # Generate randon name for network resources
 resource "random_string" "random-network-sg" {
 
@@ -84,7 +106,7 @@ module "lab-VM-provision" {
   environment    = var.environment
   admin-username = var.admin-username
   admin-password = var.admin-password
-  
+
   install-dvwa = false
   install-dnscat = false
 
@@ -139,6 +161,7 @@ data "template_file" "outputs" {
     RG-NAME        = local.resource-groups[count.index].name
     RG-LOCATION    = local.resource-groups[count.index].location
     JUMP-IP-LIST   = join("\n", module.lab-VM-provision[count.index].jump_public_ip_address)
+    SG-NAME = azurerm_network_security_group.jump-vm-nsg[count.index].name
   })
 }
 

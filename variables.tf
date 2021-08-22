@@ -61,3 +61,8 @@ variable "rg_list" {
     "VN" = 4 // resource group "VN" has 4 labs
   }
 }
+
+variable "specialist-ips" {
+  type        = map
+  description = "Specialist IP list"
+}

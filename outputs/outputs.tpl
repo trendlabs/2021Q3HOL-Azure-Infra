@@ -4,7 +4,9 @@ Your Resource Group Location: ${RG-LOCATION}
 1. Jump public IP list:
 ${JUMP-IP-LIST}
 
-Jump machine will serve as web server for the lab. The webroot is C:\www
+Jump machine will serve in the lab as a web server. The webroot is C:\www
+Your Jump Network security group: ${SG-NAME}
+You can go into Azure portal to allow more IPs for RDP connections
 
 2. Jump RDP Account
 - Username: ${ADMIN-USER}

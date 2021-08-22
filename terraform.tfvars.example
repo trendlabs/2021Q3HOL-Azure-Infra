@@ -14,11 +14,21 @@ linux-subnet-cidr = "10.0.0.128/25"
 admin-username = "labadmin"
 admin-password = "YOUR-Strong-password"
 
-rg_list = { // need RG name to put here
-  "VN" = 4,
-  "TH" = 5,
-  "MY" = 5,
-  "PH" = 4,
-  "ID" = 4,
-  "SG" = 7,
+rg_list = {
+  // need in this format
+  // "RG name" = <number of participants in each BU>
+  "TH" = 7,
+  "AE" = 11,
+  "VN" = 4
+}
+
+specialist-ips = {
+  // if you want to restrict connection to RDP from specific IP
+  // then put list of IP in below section as example here
+  // else just put "Internet" for no restriction
+  // note the order in this list matches with the order in rg_list above
+  
+  "TH" = ["xx.yy.zz.34/32", "xx.yy.zz.240/32" ],
+  "AE" = [ "xx.yy.zz.240/32" ],
+  "VN" = ["Internet"],
 }

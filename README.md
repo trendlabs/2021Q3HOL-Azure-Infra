@@ -51,7 +51,7 @@ Returned result is in JSON, find the block similar to the below (note the **"Mic
 
 - Create a service principle with the above ID value (https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_client_secret)
 ```
-az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/<above subcription id value>"
+az ad sp create-for-rbac --role="Owner" --scopes="/subscriptions/<above subcription id value>"
 ```
 If the command executed successfully, you will receive something as below
 ```
@@ -69,18 +69,21 @@ in the output, note the below for terraform to run
  - tenant (which is the *azure_tenant_id* in terraform.vars below)
 
 ### Let's start
-- Review and update values in terraform.tfvars.example to match your Azure environment
-- Save as new file, name it: terraform.tfvars  
-- When you are ready, open terminal and run below commands:
+- When you are ready, open terminal / Powershell or CMD and run below commands:
 ```
-  $ git clone https://github.com/trendlabs/2021Q3HOL-Azure-Infra.git
-  $ cd 2021Q3HOL-Azure-Infra
-  $ terraform init
-  $ terraform plan -out=tfplan
-  $ terraform apply -auto-approve -parallelism=50 tfplan
+  git clone https://github.com/trendlabs/2021Q3HOL-Azure-Infra.git
+```
+- Get into the cloned folder, review and update values in terraform.tfvars.example to match your Azure environment
+- Save as new file within same folder , name it: terraform.tfvars
+```
+ cd 2021Q3HOL-Azure-Infra
+ terraform init
+ terraform plan -out=tfplan
+ terraform apply -auto-approve -parallelism=50 tfplan
 ```
 if there are some errors during the apply process, you need to review variables you set in the terraform.tfvars to make sure everything is correctly set, the run the last command again, or destroy (with command below) and run 2 last commands again
 *Note: terraform needs about 25-60min to provision labs (depends on the number of labs)*
+
 - After infra provisioned, make sure a file ***terraform.tfstate*** generated in the same folder. This file is critical for your to clean up all the labs after the session
 - When you finish the hands-on, to clean-up all the infra, run below:
 ```

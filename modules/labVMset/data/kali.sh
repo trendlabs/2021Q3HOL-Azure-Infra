@@ -1,13 +1,14 @@
 #! /bin/bash
 
-dnf update -y
-dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
-dnf install docker-ce --nobest -y
-systemctl start docker
-systemctl enable docker
-dnf install git ruby ruby-devel rubygems make gcc redhat-rpm-config -y
-
-usermod -aG docker ${ADMIN-USER}
+# dnf update -y
+# dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+# dnf install docker-ce --nobest -y
+# systemctl start docker
+# systemctl enable docker
+# usermod -aG docker ${ADMIN-USER}
+# curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+# chmod +x /usr/local/bin/docker-compose
+# ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 echo "${KALI-PRIV-IP} attacker" >> /etc/hosts
 echo "${DVWA-PRIV-IP} dvwa" >> /etc/hosts
@@ -25,6 +26,8 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
 cd /home/${ADMIN-USER}
 
 if ${DNSCAT}; then
+dnf makecache
+dnf install git ruby ruby-devel rubygems make gcc redhat-rpm-config -y
 git clone https://github.com/iagox86/dnscat2.git
 cd dnscat2/server/
 gem install bundler
@@ -33,9 +36,6 @@ ln -s /usr/local/bin/bundle /usr/bin/bundle
 ln -s /usr/local/bin/bundler /usr/bin/bundler
 bundle install
 fi
-curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-chmod +x /usr/local/bin/docker-compose
-ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 cd /home/${ADMIN-USER}
 
